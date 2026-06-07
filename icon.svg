@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mi Carrera">
+  <rect width="512" height="512" rx="108" fill="#0f766e"/>
+  <path fill="#d7f1ea" d="M132 138h248c18 0 32 14 32 32v210H100V170c0-18 14-32 32-32Z"/>
+  <path fill="#134e4a" d="M132 138h248c18 0 32 14 32 32v38H100v-38c0-18 14-32 32-32Z"/>
+  <path fill="#ffffff" d="M151 254h88v36h-88v-36Zm122 0h88v36h-88v-36ZM151 320h88v36h-88v-36Zm122 0h88v36h-88v-36Z"/>
+  <path fill="#f6c85f" d="M163 167h32v74h-32v-74Zm154 0h32v74h-32v-74Z"/>
+  <path fill="#ffffff" d="M196 116h32v82h-32v-82Zm154 0h32v82h-32v-82Z"/>
+</svg>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" id="themeColorMeta" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Mi Carrera" />
+    <title>Mi Carrera</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=5" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Ingenieria Industrial</p>
+          <h1>Mi Carrera</h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="themeButton" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar tema">
+            <span id="themeIcon" aria-hidden="true">☾</span>
+          </button>
+          <button class="ghost-button" id="resetButton" type="button" aria-label="Reiniciar datos">Reiniciar</button>
+        </div>
+      </header>
+
+      <nav class="app-tabs" aria-label="Secciones de la app">
+        <button class="tab-button is-active" type="button" data-view="main">Notas</button>
+        <button class="tab-button" type="button" data-view="settings">Configuracion</button>
+      </nav>
+
+      <main id="mainView">
+        <section class="dashboard" aria-label="Resumen de avance">
+          <article class="metric primary">
+            <span class="metric-label">Promedio comun</span>
+            <strong id="averageValue">--</strong>
+            <small id="averageDetail">Sin materias aprobadas</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Avance</span>
+            <strong id="progressValue">0%</strong>
+            <small id="progressDetail">0 de 0 aprobadas</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Pendientes</span>
+            <strong id="pendingValue">0</strong>
+            <small>Materias por completar</small>
+          </article>
+        </section>
+
+        <section class="panel" aria-labelledby="availableTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ahora podrias cursar</p>
+              <h2 id="availableTitle">Materias habilitadas</h2>
+            </div>
+          </div>
+          <div class="available-list" id="availableList"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="planTitle">
+          <div class="section-heading sticky-heading">
+            <div>
+              <p class="eyebrow">Plan de estudio</p>
+              <h2 id="planTitle">Materias por semestre</h2>
+            </div>
+            <div class="legend" aria-label="Referencias de estado">
+              <span><i class="dot pending"></i>Pendiente</span>
+              <span><i class="dot in-progress"></i>Cursando</span>
+              <span><i class="dot regular"></i>Regular</span>
+              <span><i class="dot approved"></i>Aprobada</span>
+            </div>
+          </div>
+          <div class="curriculum" id="curriculum"></div>
+        </section>
+      </main>
+
+      <main class="settings-view" id="settingsView" hidden>
+        <section class="panel" aria-labelledby="settingsTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Configuracion de evaluaciones</p>
+              <h2 id="settingsTitle">Aprobacion y porcentajes</h2>
+            </div>
+          </div>
+
+          <div class="settings-layout">
+            <aside class="settings-sidebar" aria-label="Seleccion de materia">
+              <label>
+                Materia
+                <select id="settingsCourse"></select>
+              </label>
+              <div class="settings-summary" id="settingsSummary"></div>
+            </aside>
+
+            <section class="evaluation-editor" aria-label="Editor de evaluaciones">
+              <div class="editor-grid">
+                <label>
+                  Se aprueba con
+                  <input id="passingGradeInput" inputmode="decimal" min="1" max="10" step="0.5" type="number" />
+                </label>
+                <label>
+                  Nota final calculada
+                  <input id="computedGradeInput" type="text" readonly />
+                </label>
+              </div>
+
+              <div class="section-heading compact">
+                <div>
+                  <p class="eyebrow">Instancias evaluativas</p>
+                  <h3>Pesos para la nota</h3>
+                </div>
+                <button class="ghost-button" id="addComponentButton" type="button">Agregar</button>
+              </div>
+
+              <div class="component-list" id="componentList"></div>
+              <p class="weight-message" id="weightMessage"></p>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="courseTemplate">
+      <article class="course-card">
+        <div class="course-main">
+          <div>
+            <p class="course-meta"></p>
+            <h3></h3>
+          </div>
+          <span class="lock-pill"></span>
+        </div>
+        <div class="course-controls">
+          <label>
+            Estado
+            <select class="status-select">
+              <option value="pending">Pendiente</option>
+              <option value="in-progress">Cursando</option>
+              <option value="regular">Regularizada</option>
+              <option value="approved">Aprobada</option>
+            </select>
+          </label>
+          <label class="grade-field">
+            Nota
+            <input class="grade-input" inputmode="decimal" min="1" max="10" step="0.5" type="number" placeholder="1-10" />
+          </label>
+        </div>
+        <p class="missing-text"></p>
+      </article>
+    </template>
+
+    <template id="componentTemplate">
+      <article class="component-row">
+        <label>
+          Tipo
+          <select class="component-type">
+            <option value="Parcial">Parcial</option>
+            <option value="Trabajo practico">Trabajo practico</option>
+            <option value="Examen final">Examen final</option>
+            <option value="Trabajo final">Trabajo final</option>
+            <option value="Otra instancia">Otra instancia</option>
+          </select>
+        </label>
+        <label>
+          Nombre
+          <input class="component-name" type="text" placeholder="Ej. Primer parcial" />
+        </label>
+        <label>
+          Peso %
+          <input class="component-weight" inputmode="decimal" min="0" max="100" step="1" type="number" />
+        </label>
+        <label>
+          Nota
+          <input class="component-score" inputmode="decimal" min="1" max="10" step="0.5" type="number" placeholder="1-10" />
+        </label>
+        <button class="remove-component" type="button" aria-label="Eliminar instancia">Quitar</button>
+      </article>
+    </template>
+
+    <script src="data.js?v=5"></script>
+    <script src="app.js?v=5"></script>
+  </body>
+</html>
